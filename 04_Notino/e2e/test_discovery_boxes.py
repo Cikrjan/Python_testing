@@ -1,3 +1,4 @@
+import os
 import pytest
 from playwright.sync_api import Page, expect
 
@@ -41,5 +42,6 @@ def test_db_filter(new_page: Page):
   
 
     # 8. Take a screenshot. Comment this line out during development
+    os.makedirs("04_Notino/e2e/screenshots", exist_ok=True)
     new_page.screenshot(path="e2e/screenshots/filter_result.png")
     print("Screenshot saved.")
