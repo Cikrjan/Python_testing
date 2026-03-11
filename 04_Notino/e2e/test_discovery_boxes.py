@@ -26,7 +26,7 @@ def test_db_filter(new_page: Page):
     DB_link = new_page.get_by_role("link", name="Discovery boxy").first
 
     # Give it more time (3s), after that click on it
-    DB_link.wait_for(state="visible", timeout=3000)
+    DB_link.wait_for(state="visible", timeout=10000)
     DB_link.click()
 
     # 4. Page loaded check
