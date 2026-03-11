@@ -1,7 +1,7 @@
 import pytest
 from playwright.sync_api import Page, expect
 
-def test_db_filter(new_page):
+def test_db_filter(new_page: Page):
     # 1. Open the website
     new_page.goto("https://www.notino.cz/")
 
@@ -19,28 +19,26 @@ def test_db_filter(new_page):
         #If doesn't, it's okay, let's move on
         print("Cookie bar did not appear within 3s.")
 
-  # 3. Click on Discovery boxes page
-    # We use a more flexible locator. Sometimes 'nav' is too restrictive.
-    # We search for a link (link) that contains the text.
-    discovery_link = new_page.get_by_role("link", name="Discovery boxy").first
+  # 3. Discovery boxes are hidden under 'Inspirace' hover menu, so I need to locate it first.
+    new_page.get_by_text("Inspirace").first.hover()
+    new_page.wait_for_timeout(2000)
+    #Then I can locate 'Discovery boxy'
+    DB_link = new_page.get_by_role("link", name="Discovery boxy").first
 
-    # We give it more time (10s) and scroll to it
-    discovery_link.wait_for(state="visible", timeout=10000)
-    discovery_link.click()
+    # Give it more time (3s), after that click on it
+    DB_link.wait_for(state="visible", timeout=3000)
+    DB_link.click()
 
     # 4. Page loaded check
-    expect(new_page).to_have_url("https://www.notino.cz/discovery-boxy/")
+    expect(new_page).to_have_url("https://www.notino.cz/beauty/?f=1-1-44128-77223")
+    print("Discovery boxes url load check")
 
-    # 5. Filter "Brand"
-    # Fixed the typo from "Zančka" to "Značka"
-    new_page.get_by_role("button", name="Značka").click()
-
-    # 6. Choose brand
-    new_page.get_by_label("Notino").check()
-
-    # 7. Final wait and log
-    new_page.wait_for_timeout(2000)
+    # 5. Filter for 'Parfémy' and pick only the best (5-star reviews) under 'Hodnocení' section.
+    perfumes = new_page.get_by_role("link", name="Parfémy").first
+    perfumes.click()
+    expect(new_page).to_have_url("https://www.notino.cz/beauty/?f=1-1-44128-55544-77223")
     print("Test complete, filter works!")
+  
 
     # 8. Take a screenshot. Comment this line out during development
     new_page.screenshot(path="e2e/screenshots/filter_result.png")

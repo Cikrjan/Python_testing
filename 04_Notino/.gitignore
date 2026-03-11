@@ -1,1 +1,15 @@
+# Environments
 venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Personal notes
+notes.txt
+
+# Test artifacts
+e2e/screenshots/
+test-results/
+.pytest_cache/
