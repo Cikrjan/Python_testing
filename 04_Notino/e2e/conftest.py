@@ -11,7 +11,7 @@ def new_page(request):
     browser_name = request.param
     with sync_playwright() as p:
         browser_type = getattr(p, browser_name)
-        browser = browser_type.launch(headless=False, slow_mo=1500, args=["--disable-blink-features=AutomationControlled"])
+        browser = browser_type.launch(headless=True, slow_mo=1500, args=["--disable-blink-features=AutomationControlled"])
         context = browser.new_context(viewport={'width': 1920, 'height': 1000}, user_agent="Mozilla/5.0 (Windows NT 10.0; AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36")
         page = context.new_page()
         yield page
