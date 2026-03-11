@@ -13,3 +13,5 @@ notes.txt
 e2e/screenshots/
 test-results/
 .pytest_cache/
+
+.vscode/
