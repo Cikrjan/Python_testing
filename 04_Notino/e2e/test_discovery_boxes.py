@@ -3,6 +3,7 @@ import pytest
 from playwright.sync_api import Page, expect
 
 def test_db_filter(new_page: Page):
+    os.makedirs("04_Notino/e2e/screenshots", exist_ok=True)
     # 1. Open the website
     new_page.goto("https://www.notino.cz/")
 
@@ -24,24 +25,27 @@ def test_db_filter(new_page: Page):
     new_page.get_by_text("Inspirace").first.hover()
     new_page.wait_for_timeout(2000)
     #Then I can locate 'Discovery boxy'
-    DB_link = new_page.get_by_role("link", name="Discovery boxy").first
+    try:
+        DB_link = new_page.get_by_role("link", name="Discovery boxy").first
 
-    # Give it more time (3s), after that click on it
-    DB_link.wait_for(state="visible", timeout=10000)
-    DB_link.click()
+        # Give it more time (3s), after that click on it
+        DB_link.wait_for(state="visible", timeout=10000)
+        DB_link.click()
 
-    # 4. Page loaded check
-    expect(new_page).to_have_url("https://www.notino.cz/beauty/?f=1-1-44128-77223")
-    print("Discovery boxes url load check")
+        # 4. Page loaded check
+        expect(new_page).to_have_url("https://www.notino.cz/beauty/?f=1-1-44128-77223")
+        print("Discovery boxes url load check")
 
-    # 5. Filter for 'Parfémy' and pick only the best (5-star reviews) under 'Hodnocení' section.
-    perfumes = new_page.get_by_role("link", name="Parfémy").first
-    perfumes.click()
+        # 5. Filter for 'Parfémy' and pick only the best (5-star reviews) under 'Hodnocení' section.
+        perfumes = new_page.get_by_role("link", name="Parfémy").first
+        perfumes.click(force=True, timeout=10000)
+    except Exception as e:
+        print(f"Error intercepted: {e}")
+        raise e
+    finally:
+        new_page.screenshot(path="04_Notino/e2e/screenshots/final_state.png", full_page=True)
+        print("Screenshot has been saved.")
+
     expect(new_page).to_have_url("https://www.notino.cz/beauty/?f=1-1-44128-55544-77223")
     print("Test complete, filter works!")
   
-
-    # 8. Take a screenshot. Comment this line out during development
-    os.makedirs("04_Notino/e2e/screenshots", exist_ok=True)
-    new_page.screenshot(path="e2e/screenshots/filter_result.png")
-    print("Screenshot saved.")
