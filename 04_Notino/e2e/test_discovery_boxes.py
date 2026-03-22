@@ -1,5 +1,4 @@
 import os
-import re
 import pytest
 from playwright.sync_api import Page, expect
 
@@ -23,7 +22,7 @@ def test_db_filter(new_page: Page):
         #If doesn't, it's okay, let's move on
         print("Cookie bar did not appear within 3s.")
 
-  # 3. Discovery boxes are hidden under 'Inspirace' hover menu, so I need to locate it first.
+    # 3. Discovery boxes are hidden under 'Inspirace' hover menu, so I need to locate it first.
     new_page.locator("[data-cypress='mainMenu-Inspirace']").nth(1).hover()
     
     #Then I can locate 'Discovery boxy'
@@ -41,5 +40,15 @@ def test_db_filter(new_page: Page):
     perfumes = new_page.get_by_role("link", name="Parfémy").first
     perfumes.click(force=True)
 
-    new_page.wait_for_url(re.compile(r".*55544.*"), timeout=10000)
+    expect(new_page).to_have_url("https://www.notino.cz/beauty/?f=1-1-44128-55544-77223")
     print("Perfumes selected, test complete.")
+
+    # 6 5-star review.
+    new_page.locator("label").filter(has_text="5,019").click()
+
+    expect(new_page).to_have_url("https://www.notino.cz/beauty/?f=1-1-44128-55544-77223-200005")
+    print("Selected by 5-star review page.")
+
+    five_star_review_products = new_page.get_by_test_id("product-container").first
+    expect(five_star_review_products).to_contain_text("5,0")
+    print("Verification that we have 5-star review products displayed.")
