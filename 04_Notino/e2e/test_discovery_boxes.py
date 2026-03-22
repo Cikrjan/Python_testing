@@ -22,7 +22,7 @@ def test_db_filter(new_page: Page):
     # 3. Discovery boxes are hidden under 'Inspirace' hover menu, so I need to locate it first.
     new_page.locator("[data-cypress='mainMenu-Inspirace']").nth(1).hover()
     
-    #Then I can locate 'Discovery boxy'
+    #Then I can locate "Discovery boxy"
     DB_link = new_page.get_by_role("link", name="Discovery boxy").first
 
     # Give it time, after that click on it
@@ -40,7 +40,7 @@ def test_db_filter(new_page: Page):
     expect(new_page).to_have_url("https://www.notino.cz/beauty/?f=1-1-44128-55544-77223")
     print("Perfumes selected, test complete.")
 
-    # 6 5-star review.
+    # 6 And of course we want only the best. Filter 5-star review.
     new_page.locator("label").filter(has_text="5,019").click()
 
     expect(new_page).to_have_url("https://www.notino.cz/beauty/?f=1-1-44128-55544-77223-200005")
