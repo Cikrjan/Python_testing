@@ -1,6 +1,29 @@
+import os
 import pytest
 from playwright.sync_api import sync_playwright
 from _pytest.python import Metafunc
+from datetime import datetime
+
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    report = outcome.get_result()
+
+    if report.when == "call" and report.failed:
+        page = item.funcargs.get("new_page") or item.funcargs.get("page")
+
+        if page:
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            screenshot_dir = os.path.join(base_dir, "screenshots")
+            os.makedirs(screenshot_dir, exist_ok=True)
+
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+            file_name = f"FAILED_{item.name}_{timestamp}.png"
+            path = os.path.join(screenshot_dir, file_name)
+
+            page.screenshot(path=path, full_page=True)
+            print(f"\nFailure screenshot saved: {path}")
 
 @pytest.fixture(scope='function')
 def new_page(request):
