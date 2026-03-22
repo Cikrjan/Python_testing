@@ -34,7 +34,7 @@ def test_db_filter(new_page: Page):
     print("Discovery boxes url load check")
 
     # 5. Filter for 'Parfémy'.
-    perfumes = new_page.get_by_role("link", name="Parfémy").first
+    perfumes = new_page.get_by_test_id("navigation-tree").get_by_role("link", name="Parfémy").first
     perfumes.click(force=True)
 
     expect(new_page).to_have_url("https://www.notino.cz/beauty/?f=1-1-44128-55544-77223")
