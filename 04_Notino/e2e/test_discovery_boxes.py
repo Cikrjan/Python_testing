@@ -30,7 +30,7 @@ def test_db_filter(new_page: Page):
     DB_link.click()
 
     # 4. Are we on the same page? (Pun intended) Great, print success message.
-    expect(new_page).to_have_url("https://www.notino.cz/beauy/?f=1-1-44128-77223")
+    expect(new_page).to_have_url("https://www.notino.cz/beauty/?f=1-1-44128-77223")
     print("Discovery boxes url load check")
 
     # 5. Filter for 'Parfémy'.

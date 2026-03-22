@@ -2,6 +2,7 @@ import os
 import pytest
 from playwright.sync_api import sync_playwright
 from _pytest.python import Metafunc
+from datetime import datetime
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
@@ -16,7 +17,9 @@ def pytest_runtest_makereport(item, call):
             screenshot_dir = os.path.join(base_dir, "screenshots")
             os.makedirs(screenshot_dir, exist_ok=True)
 
-            file_name = f"FAILED_{item.name}.png"
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+            file_name = f"FAILED_{item.name}_{timestamp}.png"
             path = os.path.join(screenshot_dir, file_name)
 
             page.screenshot(path=path, full_page=True)
