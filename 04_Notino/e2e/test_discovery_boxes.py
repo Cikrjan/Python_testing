@@ -31,17 +31,17 @@ def test_db_filter(new_page: Page):
 
     # 4. Are we on the same page? (Pun intended) Great, print success message.
     expect(new_page).to_have_url("https://www.notino.cz/beauty/?f=1-1-44128-77223")
-    print("Discovery boxes url load check")
+    print("Discovery boxes url load check.")
 
     # 5. Filter for 'Parfémy'.
     perfumes = new_page.get_by_test_id("navigation-tree").get_by_role("link", name="Parfémy").first
     perfumes.click(force=True)
 
     expect(new_page).to_have_url("https://www.notino.cz/beauty/?f=1-1-44128-55544-77223")
-    print("Perfumes selected, test complete.")
-
+    print("Perfumes selected.")
+    
     # 6 And of course we want only the best. Filter 5-star review.
-    new_page.locator("label").filter(has_text="5,019").click()
+    new_page.locator("label").filter(has_text="5,016").click()
 
     expect(new_page).to_have_url("https://www.notino.cz/beauty/?f=1-1-44128-55544-77223-200005")
     print("Selected by 5-star review page.")
