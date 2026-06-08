@@ -11,8 +11,10 @@ def test_get_product_detail(playwright):
     assert response.ok, f"API requet failed with status {response.status}"
     assert response.status == 200
 
-    assert response["id"] == 1
-    assert "title" in response
-    assert "body" in response
-    
+    response_data = response.json()
+
+    assert response_data["id"] == 1
+    assert "title" in response_data
+    assert "body" in response_data
+
     api_context.dispose()
